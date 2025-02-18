@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    {% load static %}
+
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <h1>To-Do List</h1>
+
+    <a href="{% url 'add_todo' %}">Add New Task</a>
+
+    <ul>
+        {% for todo in todos %}
+            <li>
+                <form action="{% url 'toggle_completed' todo.id %}" method="POST" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit">
+                        {% if todo.completed %}
+                            Unmark
+                        {% else %}
+                            Mark as Completed
+                        {% endif %}
+                    </button>
+                </form>
+
+                <span class="{% if todo.completed %}completed{% endif %}">
+                    {{ todo.task }}
+                </span>
+
+                <form action="{% url 'delete_todo' todo.id %}" method="POST" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit">Delete</button>
+                </form>
+            </li>
+        {% empty %}
+            <li>No tasks available</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
